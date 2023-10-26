@@ -2,10 +2,10 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
-<suite name="BooksTestSuite">
-    <test name="BooksTestWithAPI">
+<suite name="API Tests">
+    <test name="API Tests About Books And Booking">
         <classes>
-            <class name="Tests.TestBooksAPI"/>
+            <class name="Tests.TestRunner"/>
         </classes>
     </test>
 </suite>
