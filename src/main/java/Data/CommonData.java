@@ -1,15 +1,25 @@
 package Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class CommonData {
 
-    public static final String bookStoreGetURLWithoutParams = "https://bookstore.toolsqa.com/BookStore/v1/Books";
+    // Booker Authentication Data
+    public static final String bookStoreGetBooksURI = "https://bookstore.toolsqa.com/BookStore/v1/Books",
+            bookerAuthURI = "https://restful-booker.herokuapp.com/auth",
+            firstBookerUpdateURI = "https://restful-booker.herokuapp.com/booking/1";
 
-    public static final String bookStoreGetURLWithParams = "https://bookstore.toolsqa.com/BookStore/v1/Book";
+    // Booker Data
+    public static final String userName = "admin",
+            userPassword = "password123",
+            bookerFirstName = "Jack",
+            bookerLastName = "Reacher",
+            bookerCheckinDate = "2023-03-03",
+            bookerCheckoutDate = "2023-11-11",
+            bookerAdditionalNeeds = "Rifle";
+    public static final int bookerTotalPrice = 911;
+    public static final boolean bookerDepositPaid = false;
 
-    public static List<Map<String, String>> extractedBooks = new ArrayList<>();
+    // Books Data
+    public static final String expectedAuthorOfFirstBook = "Richard E. Silverman",
+            expectedAuthorOfSecondBook = "Addy Osmani";
 
 }
