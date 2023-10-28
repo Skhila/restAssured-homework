@@ -1,34 +1,33 @@
 package Steps;
 
+import SpecBuilders.ResponseSpecs;
 import io.qameta.allure.Step;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 import org.json.simple.JSONObject;
 
 import static Data.CommonData.*;
-import static io.restassured.RestAssured.given;
+import static SpecBuilders.RequestSpecs.*;
+import static io.restassured.RestAssured.*;
 
 public class BookerSteps {
+    private String username;
+    private String password;
 
-    // Booker Data JSONObjects
+    RequestSpecification bookingRequestSpecification;
+    ResponseSpecification bookingResponseSpecification;
+
+    public BookerSteps(String username, String password){
+        this.username = username;
+        this.password = password;
+
+        bookingRequestSpecification = getRequestSpecForBooker(this.username, this.password);
+        bookingResponseSpecification = ResponseSpecs.createDeleteResponseSpec();
+    }
+
+    // JSONObjects For Booker Body Data
     public static JSONObject bodyParams = new JSONObject(),
-            bookingDates = new JSONObject(),
-            requestUser = new JSONObject();
-
-    @Step("Set Request User And Password To get Token")
-    public BookerSteps setRequestUser(){
-        requestUser.put("username", userName);
-        requestUser.put("password", userPassword);
-        return this;
-    }
-
-    @Step("Get Token For Further Use")
-    public String getToken(){
-        return given()
-                        .contentType("application/json")
-                        .body(requestUser.toJSONString())
-                        .when()
-                        .post(bookerAuthURI)
-                        .jsonPath().getString("token");
-    }
+            bookingDates = new JSONObject();
 
     @Step("Sets Request Body Data To Update Booker Data")
     public BookerSteps setRequestBodyData(){
@@ -46,21 +45,40 @@ public class BookerSteps {
         return this;
     }
 
-    @Step("Sends Put Request To Update First Booker's Data")
-    public BookerSteps updateBookerData(String token){
-        int putResponse =
-                given()
-                        .contentType("application/json")
-                        .accept("application/json")
-                        .header("Cookie", "token=" + token)
-                        .body(bodyParams.toJSONString())
-                .when()
-                        .put(firstBookerUpdateURI)
-                .then()
-                        .log().ifStatusCodeIsEqualTo(201)
-                        .extract().statusCode();
+    @Step
+    public int getBookingID(){
+        return given(bookingRequestSpecification)
+                .get(bookingURI)
+                .jsonPath().getInt("[0].bookingid");
+    }
 
-        System.out.println("Status Code Of The Recent Put Request: " + putResponse);
+    @Step("Delete Random Booking")
+    public BookerSteps deleteBookingByID(int bookingID){
+        int deleteResponseStatusCode = given(bookingRequestSpecification)
+                .when()
+                    .delete(bookingURI + bookingID)
+                .then()
+                    .spec(bookingResponseSpecification)
+                    .extract().statusCode();
+
+        System.out.printf("Booking(ID = %d) Deleted Successfully(Status Code = %d)\n", bookingID, deleteResponseStatusCode);
         return this;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
 }
