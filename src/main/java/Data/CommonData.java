@@ -4,8 +4,8 @@ public class CommonData {
 
     // Booker Authentication Data
     public static final String bookStoreGetBooksURI = "https://bookstore.toolsqa.com/BookStore/v1/Books",
-            bookerAuthURI = "https://restful-booker.herokuapp.com/auth",
-            firstBookerUpdateURI = "https://restful-booker.herokuapp.com/booking/1";
+            bookerBaseURI = "https://restful-booker.herokuapp.com",
+            bookingURI = "/booking/";
 
     // Booker Data
     public static final String userName = "admin",
@@ -21,5 +21,7 @@ public class CommonData {
     // Books Data
     public static final String expectedAuthorOfFirstBook = "Richard E. Silverman",
             expectedAuthorOfSecondBook = "Addy Osmani";
+
+    public static final int expectedMaxPageCount = 1000;
 
 }
