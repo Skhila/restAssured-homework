@@ -5,9 +5,9 @@ import io.restassured.specification.ResponseSpecification;
 
 public class ResponseSpecs {
 
-    public static ResponseSpecification createDeleteResponseSpec(){
+    public static ResponseSpecification createResponseCheckerSpec(int expectedStatusCode){
         return new ResponseSpecBuilder()
-                .expectStatusCode(201)
+                .expectStatusCode(expectedStatusCode)
                 .build();
     }
 }

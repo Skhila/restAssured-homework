@@ -4,7 +4,7 @@ import Data.CommonData;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
-import org.json.simple.JSONObject;
+import models.request.Booking;
 
 import static io.restassured.RestAssured.given;
 
@@ -17,5 +17,12 @@ public class RequestSpecs {
                 .build();
 
         return given(requestSpecBuilder).auth().preemptive().basic(username, password);
+    }
+
+    public static RequestSpecification getBaseRequestSpecForBooking(){
+        return new RequestSpecBuilder()
+                .setBaseUri(CommonData.bookerBaseURI)
+                .setContentType(ContentType.JSON)
+                .build();
     }
 }
