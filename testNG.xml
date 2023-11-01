@@ -3,9 +3,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="API Tests">
-    <test name="API Tests About Books And Booking">
+    <test name="Booking API Tests Using RestAssured">
         <classes>
-            <class name="Tests.TestRunner"/>
+            <class name="Tests.BookingTests"/>
         </classes>
     </test>
 </suite>

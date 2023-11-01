@@ -1,40 +1,49 @@
 package Tests;
 
+import Data.DataProviders;
 import Steps.CreateBookingSteps;
 import Steps.GetBookingSteps;
+import Steps.UpdateBookingSteps;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import models.request.Booking;
 import models.request.BookingDates;
 import models.response.BookingResponseFromGet;
-import models.response.BookingResponseFromPost;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static Data.CommonData.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.not;
 
+@Epic("API Tests")
+@Feature("Booking API Tests Using RestAssured")
 public class BookingTests {
     CreateBookingSteps createBookingSteps;
     GetBookingSteps getBookingSteps;
-    BookingResponseFromPost bookingResponseFromPost;
+    UpdateBookingSteps updateBookingSteps;
 
     @BeforeClass
     public void initiateSteps() {
         createBookingSteps = new CreateBookingSteps();
         getBookingSteps = new GetBookingSteps();
+        updateBookingSteps = new UpdateBookingSteps();
     }
 
-    @Test
-    public void createBookingTest() {
-        BookingDates bookingDates = createBookingSteps.createBookingDates(bookingCheckinDate, bookingCheckoutDate);
+    @Test(dataProvider = "bookingDataProvider", dataProviderClass = DataProviders.class)
+    public void updateBookingTest(String firstname, String lastname, String checkinDate, String checkoutDate, String additionalNeeds,
+                                  String passportNo, int totalPrice, int salePrice, boolean depositPaid){
+        int bookingID = getBookingSteps.getBookingID();
 
-        bookingResponseFromPost = createBookingSteps
-                .createBookingBody(bookingFirstname, bookingLastname, bookingTotalPrice, bookingDepositPaid, bookingDates, bookingAdditionalNeeds)
-                .createBooking();
+        BookingDates bookingDates = createBookingSteps.createBookingDates(checkinDate, checkoutDate);
+        Booking bookingBodyForUpdate = createBookingSteps.createBookingBody(firstname, lastname, totalPrice, depositPaid,
+                bookingDates, additionalNeeds, salePrice, passportNo);
 
-    }
+        BookingResponseFromGet bookingBeforeUpdate = getBookingSteps.getBookingByID(bookingID);
 
-    @Test
-    public void getCreatedBookingTest(){
-        BookingResponseFromGet bookingResponseFromGet = getBookingSteps.getBookingByID(bookingResponseFromPost.bookingid);
+        BookingResponseFromGet bookingAfterUpdate = updateBookingSteps.updateBookingByID(bookingID, bookingBodyForUpdate);
 
-        getBookingSteps.validateBooking(bookingResponseFromPost.booking, bookingResponseFromGet);
+        assertThat(bookingAfterUpdate, not(equalTo(bookingBeforeUpdate)));
+        System.out.println("Update Validated Successfully! 🥳");
     }
 }
